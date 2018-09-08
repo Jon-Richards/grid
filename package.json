@@ -1,0 +1,23 @@
+{
+  "name": "@jon-richards/grid",
+  "version": "0.0.1",
+  "private": true,
+  "description": "SCSS based grid systems and helper classes.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jon-Richards/grid.git"
+  },
+  "author": "Jonathan Richards",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jon-Richards/grid/issues"
+  },
+  "homepage": "https://github.com/Jon-Richards/grid#readme"
+}
