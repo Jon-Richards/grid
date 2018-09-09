@@ -1,8 +1,11 @@
-// ================================ //
-// ----------  Settings  ---------- //
-// ================================ //
+// ----------  Default Settings ---------- //
 
-$scaffold_settings: (
+/** 
+ * Default grid settings.  Column classes and
+ * helper classes will be generated for each
+ * breakpoint listed below.
+ */
+$grid-settings: (
   width: 1200px, // 'Max width' of the layout
   columns: 12, // number of columns
   gutter: 20px, // gutter (Will be divided by 2 on each side.)
@@ -15,149 +18,164 @@ $scaffold_settings: (
 ) !default;
 
 
-// ======================================== //
-// ----------  Base Scaffolding  ---------- //
-// ======================================== //
+@mixin grid-base() {
 
-html {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  -webkit-box-sizing: inherit;
-  -moz-box-sizing: inherit;
-  box-sizing: inherit;
-}
+  // ---------- Base Scaffolding ---------- //
 
-.container-fluid {
-  display: block;
-  clear: both;
-  width: 100%;
-}
+  html {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
 
-.container {
-  display: block;
-  clear: both;
-  width: 100%;
-  max-width: map-get($scaffold_settings, width);
-  margin-left:auto;
-  margin-right:auto;
-}
+  *, *:before, *:after {
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+  }
 
-.row {
-  display: block;
-  width: 100%;
-  clear: both;
-  padding-left: map-get($scaffold_settings, gutter) / 2;
-  padding-right: map-get($scaffold_settings, gutter) / 2;
-  &:before, &:after {
-    display: table;
-    content: ' ';
+  /**
+  * Containers contain (hah!) rows and
+  * columns.
+  */
+  .container {
+    display: block;
     clear: both;
+    width: 100%;
+    max-width: map-get($grid-settings, width);
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  /** 
+  * Fluid containers have no max-width and will scale to fit
+  * their parent element.
+  */
+  .container--fluid {
+    @extend .container;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /**
+  * Rows provide a mechanism for stacking sets of columns,
+  * preventing one section of the layout from stacking
+  * into another.
+  */
+  .row {
+    display: block;
+    width: 100%;
+    clear: both;
+    padding-left: map-get($grid-settings, gutter) / 2;
+    padding-right: map-get($grid-settings, gutter) / 2;
+    // Prevents a stacking issue with empty columns in 
+    // some browsers.
+    &:before, &:after {
+      display: table;
+      content: ' ';
+      clear: both;
+    }
   }
 }
 
 
-// ===================================================== //
-// ----------  Dynamically Generated Classes  ---------- //
-// ===================================================== //
 
-// Creates the actual column classes
-@mixin generate_column ($prefix, $i:0, $total:0, $mode:'create') {
-  // Separating into individual cases allows for better minifaction
+// ---------- Dynamically Generated Classes ---------- //
+
+/** 
+* Creates a column class and its corresponding helper classes.
+* (Using separate else if cases generates classes that minify
+* more easily.)
+*/
+@mixin grid-column ($prefix, $i:0, $total:0, $mode:'create') {
   @if $mode == 'create' {
     .#{$prefix}-#{$i} {
       display: block;
       position: relative;
       margin: 0px;
-      padding-left: map-get($scaffold_settings, gutter) / 2;
-      padding-right: map-get($scaffold_settings, gutter) / 2;
+      padding-left: map-get($grid-settings, gutter) / 2;
+      padding-right: map-get($grid-settings, gutter) / 2;
       width: percentage((1 / $total) * $i);
       float: left;
       min-height: 1px; //prevents columns from collapsing when empty
     }
   } @else if $mode == 'hide' { // hides column at breakpoint
-    .#{$prefix}-hide {
+    .#{$prefix}--hide {
       display: none;
     }
   } @else if $mode == 'show' { // shows column at breakpoint
-    .#{$prefix}-show {
+    .#{$prefix}--show {
       display: block;
     }
   } @else if $mode == 'flush' { // removes gutter starting at breakpoint
-    .#{$prefix}-flush {
+    .#{$prefix}--flush {
       padding-left: 0;
       padding-right: 0;
     }
   } @else if $mode == 'gutter' { // adds gutter starting at breakpoint
-    .#{$prefix}-gutter {
-      padding-left: map-get($scaffold_settings, gutter) / 2;
-      padding-right: map-get($scaffold_settings, gutter) / 2;
+    .#{$prefix}--gutter {
+      padding-left: map-get($grid-settings, gutter) / 2;
+      padding-right: map-get($grid-settings, gutter) / 2;
     }
   } @else if $mode == 'pull' { // slides column to left
-    .#{$prefix}-pull-#{$i} {
+    .#{$prefix}--pull-#{$i} {
       right: percentage((1 / $total) * $i);
     }
   } @else if $mode == 'push' { // slides column to right
-    .#{$prefix}-push-#{$i} {
+    .#{$prefix}--push-#{$i} {
       left: percentage((1 / $total) * $i);
     }
   } @else if $mode == 'shift' { // shifts column to right (will affect stacking)
-    .#{$prefix}-shift-#{$i} {
+    .#{$prefix}--shift-#{$i} {
       margin-left: percentage((1 / $total) * $i);
     }
   } @else if $mode == 'text-left' { // text-align: left for this breakpoint
-    .#{$prefix}-text-left {
-     text-align: left;
+    .#{$prefix}--text-left {
+    text-align: left;
     }
   } @else if $mode == 'text-right' { // text-align: right for this breakpoint
-    .#{$prefix}-text-right {
-     text-align: right;
+    .#{$prefix}--text-right {
+    text-align: right;
     }
   } @else if $mode == 'text-center' { // text-align: center for this breakpoint
-    .#{$prefix}-text-center {
-     text-align: center;
+    .#{$prefix}--text-center {
+    text-align: center;
     }
   }
 }
 
-// Use $scaffold_settings to generate the column classes
-@each $prefix, $val in map-get($scaffold_settings, breakpoints) {
-  @media (min-width: $val) {
-   
-    // Writing the for loops this way allows for better minification.
-    // Generates classes for each possible column width for each breakpoint
-    @for $i from 1 through map-get($scaffold_settings, columns) {
-      @include generate_column($prefix, $i, map-get($scaffold_settings, columns));
+
+/** 
+*  Uses $grid-settings to generate the column classes 
+*  and helpers for each breakpoint.
+*/
+@mixin grid-generate () {
+  @include grid-base();
+
+  @each $prefix, $val in map-get($grid-settings, breakpoints) {
+    @media (min-width: $val) {
+      @for $i from 1 through map-get($grid-settings, columns) {
+        @include grid-column($prefix, $i, map-get($grid-settings, columns));
+      }
+      @for $i from 1 through map-get($grid-settings, columns) {
+        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'pull');
+      }
+      @for $i from 1 through map-get($grid-settings, columns) {
+        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'push');
+      }
+      @for $i from 1 through map-get($grid-settings, columns) {
+        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'shift');
+      }
+      
+      // Only generates one class per breakpoint
+      @include grid-column($prefix, null, null, 'hide');
+      @include grid-column($prefix, null, null, 'show');
+      @include grid-column($prefix, null, null, 'flush');
+      @include grid-column($prefix, null, null, 'gutter');
+      @include grid-column($prefix, null, null, 'text-left');
+      @include grid-column($prefix, null, null, 'text-right');
+      @include grid-column($prefix, null, null, 'text-center');
     }
-    @for $i from 1 through map-get($scaffold_settings, columns) {
-      @include generate_column($prefix, $i, map-get($scaffold_settings, columns), 'pull');
-    }
-    @for $i from 1 through map-get($scaffold_settings, columns) {
-      @include generate_column($prefix, $i, map-get($scaffold_settings, columns), 'push');
-    }
-    @for $i from 1 through map-get($scaffold_settings, columns) {
-      @include generate_column($prefix, $i, map-get($scaffold_settings, columns), 'shift');
-    }
-    
-    // Only generates one class per breakpoint
-    @include generate_column($prefix, null, null, 'hide');
-    @include generate_column($prefix, null, null, 'show');
-    @include generate_column($prefix, null, null, 'flush');
-    @include generate_column($prefix, null, null, 'gutter');
-    @include generate_column($prefix, null, null, 'text-left');
-    @include generate_column($prefix, null, null, 'text-right');
-    @include generate_column($prefix, null, null, 'text-center');
   }
-}
-
-
-// ================================================== //
-// ----------  Additional Utility Classes  ---------- //
-// ================================================== //
-
-.flush { // negates gutter on all breakpoints
-  padding-left: 0;
-  padding-right: 0;
 }
