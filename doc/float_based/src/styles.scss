@@ -1,3 +1,16 @@
 @import './../../../src/float_based/grid.scss';
+@import './../../../node_modules/reset-css/sass/_reset.scss';
 
+$grid-settings: (
+  namespace: 'flt',
+  width: 1200px, // 'Max width' of the layout
+  columns: 12, // number of columns
+  gutter: 20px, // gutter (Will be divided by 2 on each side.)
+  breakpoints: ( // number of breakpoints is dynamic, use whatever prefixes you want
+    ('xs', 0px), // Always start with 0.
+    ('sm', 375px),
+    ('md', 768px),
+    ('lg', 1200px)
+  )
+);
 @include grid-generate();

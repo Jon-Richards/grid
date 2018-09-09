@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Jon-Richards/grid#readme",
   "devDependencies": {
-    "@jon-richards/asset-compiler": "github:jon-richards/asset-compiler"
+    "@jon-richards/asset-compiler": "github:jon-richards/asset-compiler",
+    "reset-css": "4.0.1"
   }
 }
