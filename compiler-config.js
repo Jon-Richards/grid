@@ -6,7 +6,7 @@ module.exports = {
    * 'development' or 'production' (minified code).
    */
   environment: 'development',
-  
+
   /**
    * JS compilation is done via Webpack.  You can include CSS as modules in
    * your JS and Webpack will output a CSS file with the same name as the input
@@ -19,9 +19,25 @@ module.exports = {
     //   sourcemap: true
     // }
     {
-      input: Path.resolve(__dirname, 'src', 'javascript', 'typescript', 'app.tsx'),
-      output: Path.resolve(__dirname, 'prod', 'assets', 'js', 'app.js'),
-      sourcemap: true
+      input: Path.resolve(__dirname, 'doc', 'float_based', 'src', 'test.js'),
+      output: Path.resolve(__dirname, 'doc', 'float_based', 'public', 'test.js'),
+      sourcemap: true,
+      /**
+       * HTML files are generated relative to the output path.  To change
+       * the directory in which html files are created, prepend the
+       * correct relative path to the filename property.
+       * 
+       * For full documentation on settings, SEE: https://github.com/jantimon/html-webpack-plugin
+       * 
+       * NOTE:  If the config sets a public path, assets will be linked
+       *        relative to the public path, NOT the output path defined
+       *        in this node.  (This is required for the devserver to work.)
+       */
+      html: [
+        {
+          filename: './../dynamic.html'
+        }
+      ]
     }
   ],
   

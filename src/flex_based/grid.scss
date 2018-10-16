@@ -51,11 +51,27 @@
   }
 
   /**
-  * Containers contain (hah!) rows and
-  * columns.
+  * Flex container element.
   */
   .#{$NS}-container {
-    display: block;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    
+    -ms-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+
+    -webkit-align-content: flex-start;
+    align-content: flex-start;
+    
     clear: both;
     width: 100%;
     max-width: map-get($grid-settings, max-width);
@@ -73,26 +89,6 @@
     margin-left: 0;
     margin-right: 0;
   }
-
-  /**
-  * Rows provide a mechanism for stacking sets of columns,
-  * preventing one section of the layout from stacking
-  * into another.
-  */
-  .#{$NS}-row {
-    display: block;
-    width: 100%;
-    clear: both;
-    padding-left: map-get($grid-settings, gutter) / 2;
-    padding-right: map-get($grid-settings, gutter) / 2;
-    // Prevents a stacking issue with empty columns in 
-    // some browsers.
-    &:before, &:after {
-      display: table;
-      content: ' ';
-      clear: both;
-    }
-  }
 }
 
 
@@ -108,12 +104,12 @@
     .#{$NS}-#{$prefix}-#{$i} {
       display: block;
       position: relative;
+      top: 0px;
+      left: 0px;
       margin: 0px;
       padding-left: map-get($grid-settings, gutter) / 2;
       padding-right: map-get($grid-settings, gutter) / 2;
       width: percentage((1 / $total) * $i);
-      float: left;
-      min-height: 1px; //prevents columns from collapsing when empty
     }
   } @else if $mode == 'hide' { // hides column at breakpoint
     .#{$NS}-#{$prefix}-hide {
@@ -133,29 +129,63 @@
       padding-left: map-get($grid-settings, gutter) / 2;
       padding-right: map-get($grid-settings, gutter) / 2;
     }
-  } @else if $mode == 'pull' { // slides column to left
-    .#{$NS}-#{$prefix}-pull-#{$i} {
-      right: percentage((1 / $total) * $i);
-    }
-  } @else if $mode == 'push' { // slides column to right
-    .#{$NS}-#{$prefix}-push-#{$i} {
-      left: percentage((1 / $total) * $i);
-    }
-  } @else if $mode == 'shift' { // shifts column to right (will affect stacking)
-    .#{$NS}-#{$prefix}-shift-#{$i} {
-      margin-left: percentage((1 / $total) * $i);
-    }
   } @else if $mode == 'text-left' { // text-align: left for this breakpoint
     .#{$NS}-#{$prefix}-text-left {
-    text-align: left;
+      text-align: left;
     }
   } @else if $mode == 'text-right' { // text-align: right for this breakpoint
     .#{$NS}-#{$prefix}-text-right {
-    text-align: right;
+      text-align: right;
     }
   } @else if $mode == 'text-center' { // text-align: center for this breakpoint
     .#{$NS}-#{$prefix}-text-center {
-    text-align: center;
+      text-align: center;
+    }
+  } @else if $mode == 'align-start' { // flex align-self: start for this breakpoint
+    .#{$NS}-#{$prefix}-align-start {
+      -ms-flex-item-align: start;
+      -ms-grid-row-align: start;
+      align-self: start;
+    }
+  } @else if $mode == 'align-end' { // flext align-self: end for this breakpoint
+    .#{$NS}-#{$prefix}-align-end {
+      -ms-flex-item-align: end;
+      -ms-grid-row-align: end;
+      align-self: end;
+    }
+  } @else if $mode == 'align-center' { // flex align-self: center for this breakpoint
+    .#{$NS}-#{$prefix}-align-center {
+      -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+    }
+  } @else if $mode == 'align-baseline' { // flex align-self: baseline for this breakpoint
+    .#{$NS}-#{$prefix}-align-baseline {
+      -ms-flex-item-align: baseline;
+      align-self: baseline;
+    }
+  } @else if $mode == 'align-stretch' { // flex align-self: stretch for this breakpoint
+    .#{$NS}-#{$prefix}-align-stretch {
+      -ms-flex-item-align: stretch;
+      -ms-grid-row-align: stretch;
+      align-self: stretch;
+    }
+  } @else if $mode == 'order' { // changes the column's order by a given number
+    .#{$NS}-#{$prefix}-order-#{$i} {
+      -webkit-box-ordinal-group: $i + 1;
+      -ms-flex-order: $i;
+      order: $i;
+    }
+  } @else if $mode == 'grow' { // grows the column by a given number
+    .#{$NS}-#{$prefix}-grow-#{$i} {
+      -webkit-box-flex: $i;
+      -ms-flex-positive: $i;
+      flex-grow: $i;
+    }
+  } @else if $mode == 'shrink' { // changes the column's order
+    .#{$NS}-#{$prefix}-shrink-#{$i} {
+      -ms-flex-negative: $i;
+      flex-shrink: $i;
     }
   }
 }
@@ -173,15 +203,16 @@
       @for $i from 1 through map-get($grid-settings, columns) {
         @include grid-column($prefix, $i, map-get($grid-settings, columns));
       }
-      @for $i from 1 through map-get($grid-settings, columns) {
-        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'pull');
+      @for $i from 0 through map-get($grid-settings, columns) {
+        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'order');
       }
       @for $i from 1 through map-get($grid-settings, columns) {
-        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'push');
+        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'grow');
       }
       @for $i from 1 through map-get($grid-settings, columns) {
-        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'shift');
+        @include grid-column($prefix, $i, map-get($grid-settings, columns), 'shrink');
       }
+
       
       // Only generates one class per breakpoint
       @include grid-column($prefix, null, null, 'hide');
@@ -191,6 +222,11 @@
       @include grid-column($prefix, null, null, 'text-left');
       @include grid-column($prefix, null, null, 'text-right');
       @include grid-column($prefix, null, null, 'text-center');
+      @include grid-column($prefix, null, null, 'align-start');
+      @include grid-column($prefix, null, null, 'align-end');
+      @include grid-column($prefix, null, null, 'align-center');
+      @include grid-column($prefix, null, null, 'align-baseline');
+      @include grid-column($prefix, null, null, 'align-stretch');
     }
   }
 }

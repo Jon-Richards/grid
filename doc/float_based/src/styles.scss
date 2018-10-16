@@ -1,16 +1,149 @@
 @import './../../../src/float_based/grid.scss';
 @import './../../../node_modules/reset-css/sass/_reset.scss';
 
-$grid-settings: (
+/**
+ * These reflect the grid's
+ * default settings, they can
+ * all be overridden as needed.
+ */
+ $grid-settings: (
+  /** Used as a global prefix for all generated classes. */
   namespace: 'flt',
-  width: 1200px, // 'Max width' of the layout
-  columns: 12, // number of columns
-  gutter: 20px, // gutter (Will be divided by 2 on each side.)
-  breakpoints: ( // number of breakpoints is dynamic, use whatever prefixes you want
-    ('xs', 0px), // Always start with 0.
+
+  /** The maximum width for the layout. */
+  max-width: 1200px,
+
+  /** The maimim number of columns used in the layout. */
+  columns: 12,
+
+  /** The total width of the gutter between columns. */
+  gutter: 20px,
+  
+  /**
+   * Breakpoints appear as media queries in the generated CSS.
+   * The string values are used in naming the of the
+   * generated classes.  The number of breakpoints is
+   * dynamic, should start from 0 and increase in size with
+   * each breakpoint entry.
+   */
+  breakpoints: (
+    ('xs', 0px), // (start with 0)
     ('sm', 375px),
     ('md', 768px),
     ('lg', 1200px)
   )
 );
+
+/** 
+ * Kicks off the grid generation. All classes for the
+ * grid will be created at this location in your CSS.
+ */
 @include grid-generate();
+
+
+$color_dark_blue: rgb(21, 72, 168);
+$color_light_blue: rgb(52, 97, 221);
+$color_dark_grey: rgb(37, 37, 37);
+$color_light_grey: rgb(189, 189, 189);
+
+$gutter_vertical: 2rem;
+
+
+html, body {
+  font-size: 100%;
+
+  background-color: $color_light_blue;
+  background-image: linear-gradient($color_dark_blue, $color_light_blue);
+  background-size: 100% 60rem;
+  background-repeat: no-repeat;
+  
+  color: rgb(255, 255, 255);
+
+  font-family: sans-serif;
+}
+
+#float-based-demo {
+  width: auto;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  margin-bottom: $gutter_vertical;
+}
+
+.demo {
+
+  margin-bottom: $gutter_vertical;
+
+  .flt-row {
+    border: 2px dashed rgba(255, 255, 255, 0.623);
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .flt-xs-1,
+  .flt-xs-2,
+  .flt-xs-3,
+  .flt-xs-4,
+  .flt-xs-5,
+  .flt-xs-6,
+  .flt-xs-7,
+  .flt-xs-8,
+  .flt-xs-9,
+  .flt-xs-10,
+  .flt-xs-11,
+  .flt-xs-12 {
+    border: 1px dashed rgb(255, 255, 255);
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+.cell {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  text-align: center;
+  border: 1px dotted rgb(170, 200, 255);
+}
+
+.code {
+  display: block;
+  margin-bottom: $gutter_vertical;
+}
+
+
+.descList {
+  font-family: sans-serif;
+  font-size: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.295);
+}
+
+.descList__title {
+  float: left;
+  clear: left;
+  width: 150px;
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 700;
+  line-height: 1.2em;
+}
+.descList__desc {
+  float: left;
+  margin-left: 20px;
+  margin-bottom: 0.8rem;
+
+  line-height: 1.2em;
+
+  &:last-of-type {
+    margin-bottom : 0rem;
+  }
+}
+
+.clearfix::after {
+  content: '';
+  clear: both;
+  display: table;
+}

@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "asset-compiler build --css"
+    "build:css": "asset-compiler build --css",
+    "build:js": "asset-compiler build --js"
   },
   "repository": {
     "type": "git",
